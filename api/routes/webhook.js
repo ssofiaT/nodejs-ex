@@ -58,7 +58,8 @@ router.post('/', (req, res) => {
             let sender_id = webhook_event.sender.id;
             let recipient_id = webhook_event.recipient.id;
 
-            if ('text' in webhook_event.message) {
+            if ('message' in webhook_event &&
+                'text' in webhook_event.message) {
                 let text = webhook_event.message.text;
                 // random answers
                 let answers = [
