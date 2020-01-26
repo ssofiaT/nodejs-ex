@@ -58,14 +58,39 @@ router.post('/', (req, res) => {
             let sender_id = webhook_event.sender.id;
             let recipient_id = webhook_event.recipient.id;
 
-            if (webhook_event.message.text) {
+            if ('text' in webhook_event.message) {
                 let text = webhook_event.message.text;
-                // log data
-                console.log('sender_id:' + sender_id + ', recipient_id:' + recipient_id + ', text:' + text);
+                // random answers
+                let answers = [
+                    'and you?',
+                    'dont know',
+                    'well...',
+                    'so what?',
+                    'not now',
+                    'please!',
+                    'yes',
+                    'no',
+                    'you are welcome',
+                    'I need to check..',
+                    'what is ur name?',
+                    'my name is bot',
+                    'is this supposed to be funny?',
+                    'I am working hard!',
+                    'and you?',
+                    'it is too late',
+                    'I am cold',
+                    'I will work hard, I promiss!',
+                    'I told you so...',
+                    'Dont worry',
+                    'Be happy'];
 
+                let choice = Math.floor(Math.random() * answers.length);
+                // log data
+                console.log('sender_id:' + sender_id + ', recipient_id:' + recipient_id + ', text:' + text + ', choice:' + answers[choice]);
                 // prepare and send response
                 response = {
-                    "text": `Echo: "${text}"`
+                    //"text": `Echo: "${text}"`
+                    "text": answers[choice];
                 };
 
                 // send response
