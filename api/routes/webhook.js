@@ -43,7 +43,7 @@ router.post('/', (req, res) => {
 
     let body = req.body;
 
-    console.log('BODY:' + util.inspect(body, { depth: null }));
+    //console.log('BODY:' + util.inspect(body, { depth: null }));
 
     // Checks this is an event from a page subscription
     if (body.object === 'page') {
@@ -53,14 +53,22 @@ router.post('/', (req, res) => {
             // Gets the message. entry.messaging is an array, but 
             // will only ever contain one message, so we get index 0
             let webhook_event = entry.messaging[0];
-            console.log(webhook_event);
-            /*
-            let sender_id = webhook_event.sender.id;
-            let recipient_id = webhook_event.recipient.id;
-            let text = webhook_event.message.text;
+            // console.log(webhook_event);
 
-            console.log('sender_id:' + sender_id + ', recipient_id:' + recipient_id + ', text:' + text);
-            */
+            if (text) {
+                // log data
+                let sender_id = webhook_event.sender.id;
+                let recipient_id = webhook_event.recipient.id;
+                let text = webhook_event.message.text;
+                console.log('sender_id:' + sender_id + ', recipient_id:' + recipient_id + ', text:' + text);
+
+                // prepare and send response
+                response = {
+                    "text": `Echo: "${text}"`
+                };
+
+                callSendAPI(sender_id, response);
+            }
         });
 
         // Returns a '200 OK' response to all requests
@@ -72,7 +80,6 @@ router.post('/', (req, res) => {
     }
 });
 
-/*
 function callSendAPI(sender_psid, response) {
     // Construct the message body
     let request_body = {
@@ -96,6 +103,5 @@ function callSendAPI(sender_psid, response) {
         }
     });
 }
-*/
 
 module.exports = router;
