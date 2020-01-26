@@ -90,7 +90,7 @@ router.post('/', (req, res) => {
                 // prepare and send response
                 response = {
                     //"text": `Echo: "${text}"`
-                    "text": answers[choice];
+                    "text": answers[choice]
                 };
 
                 // send response
