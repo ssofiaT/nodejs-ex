@@ -5,12 +5,8 @@ router.post('/', (req, res) => {
 
     let body = req.body;
 
-    console.log('BODY:' + body);
-
     // Checks this is an event from a page subscription
     if (body.object === 'page') {
-
-        console.log('WEBHOOK');
         // Iterates over each entry - there may be multiple if batched
         body.entry.forEach(function (entry) {
 

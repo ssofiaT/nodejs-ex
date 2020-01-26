@@ -9,7 +9,7 @@ Object.assign=require('object-assign')
 
 app.engine('html', require('ejs').renderFile);
 // morgan to use dev format
-app.use(morgan('dev'));
+app.use(morgan());
 
 // add body parser
 app.use(bodyParser.urlencoded({ extended: false }));
