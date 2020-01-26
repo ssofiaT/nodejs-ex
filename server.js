@@ -163,9 +163,10 @@ app.get('/webhook', (req, res) => {
       console.log('WEBHOOK_FAILED');
       res.sendStatus(403);      
     }
+  } else {
+    console.log('WEBHOOK: NOT FOUND');
+    res.sendStatus(404);
   }
-  console.log('WEBHOOK: NOT FOUND');
-  res.sendStatus(404);
 });
 // error handling
 app.use(function(err, req, res, next){
