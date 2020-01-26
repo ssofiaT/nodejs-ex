@@ -1,12 +1,19 @@
 //  OpenShift sample Node application
 var express = require('express'),
     app     = express(),
-    morgan  = require('morgan');
+    morgan  = require('morgan'),
+    bodyParser = require('body-parser'),
+    webhookRoute = require('./api/routes/webhook');
     
 Object.assign=require('object-assign')
 
 app.engine('html', require('ejs').renderFile);
-app.use(morgan('combined'))
+// morgan to use dev format
+app.use(morgan('dev'));
+
+// add body parser
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 var port = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080,
     ip   = process.env.IP   || process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0',
@@ -109,69 +116,12 @@ app.get('/pagecount', function (req, res) {
   }
 });
 
-app.post('/webhook', (req, res) => {  
- 
-  let body = req.body;
+app.use('/webhook', webhookRoute);
 
-  // Checks this is an event from a page subscription
-  if (body.object === 'page') {
-
-    console.log('WEBHOOK');
-    // Iterates over each entry - there may be multiple if batched
-    body.entry.forEach(function(entry) {
-
-      // Gets the message. entry.messaging is an array, but 
-      // will only ever contain one message, so we get index 0
-      let webhook_event = entry.messaging[0];
-      console.log(webhook_event);
-    });
-
-    // Returns a '200 OK' response to all requests
-    res.status(200).send('EVENT_RECEIVED');
-  } else {
-    // Returns a '404 Not Found' if event is not from a page subscription
-    console.log('WEBHOOK: NOT FOUND');
-    res.sendStatus(404);
-  }
-});
-
-// Adds support for GET requests to our webhook
-app.get('/webhook', (req, res) => {
-
-  // Your verify token. Should be a random string.
-  let VERIFY_TOKEN = process.env.VERIFY_TOKEN;
-    
-  // Parse the query params
-  let mode = req.query['hub.mode'];
-  let token = req.query['hub.verify_token'];
-  let challenge = req.query['hub.challenge'];
-  
-  console.log('WEBHOOK: mode:'+mode+', token:' + token + ', challenge:' + challenge + ', verify_token:' + VERIFY_TOKEN);
-  
-  // Checks if a token and mode is in the query string of the request
-  if (mode && token) {
-  
-    // Checks the mode and token sent is correct
-    if (mode === 'subscribe' && token === VERIFY_TOKEN) {
-      
-      // Responds with the challenge token from the request
-      console.log('WEBHOOK_VERIFIED');
-      res.status(200).send(challenge);
-    
-    } else {
-      // Responds with '403 Forbidden' if verify tokens do not match
-      console.log('WEBHOOK_FAILED');
-      res.sendStatus(403);      
-    }
-  } else {
-    console.log('WEBHOOK: NOT FOUND');
-    res.sendStatus(404);
-  }
-});
 // error handling
 app.use(function(err, req, res, next){
   console.error(err.stack);
-  res.status(500).send('Something bad happened!');
+  res.status(500).json({error: err});
 });
 
 initDb(function(err){
