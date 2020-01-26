@@ -57,9 +57,9 @@ router.post('/', (req, res) => {
 
             let sender_id = webhook_event.sender.id;
             let recipient_id = webhook_event.recipient.id;
-            let text = webhook_event.message.text;
 
-            if (text) {
+            if (webhook_event.message.text) {
+                let text = webhook_event.message.text;
                 // log data
                 console.log('sender_id:' + sender_id + ', recipient_id:' + recipient_id + ', text:' + text);
 
