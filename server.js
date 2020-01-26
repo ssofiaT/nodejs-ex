@@ -133,7 +133,6 @@ app.post('/webhook', (req, res) => {
     console.log('WEBHOOK: NOT FOUND');
     res.sendStatus(404);
   }
-
 });
 
 // Adds support for GET requests to our webhook
@@ -147,7 +146,7 @@ app.get('/webhook', (req, res) => {
   let token = req.query['hub.verify_token'];
   let challenge = req.query['hub.challenge'];
   
-  console.log('WEBHOOK: mode:'+mode+', token:***' + ', challenge:' + challenge);
+  console.log('WEBHOOK: mode:'+mode+', token:' + token + ', challenge:' + challenge + ', verify_token:' + VERIFY_TOKEN);
   
   // Checks if a token and mode is in the query string of the request
   if (mode && token) {
@@ -165,6 +164,8 @@ app.get('/webhook', (req, res) => {
       res.sendStatus(403);      
     }
   }
+  console.log('WEBHOOK: NOT FOUND');
+  res.sendStatus(404);
 });
 // error handling
 app.use(function(err, req, res, next){
