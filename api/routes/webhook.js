@@ -1,6 +1,6 @@
 const
     express = require('express'),
-    //request = require('request'),
+    request = require('request'),
     util = require('util'),
     router = express.Router();
 
@@ -55,11 +55,12 @@ router.post('/', (req, res) => {
             let webhook_event = entry.messaging[0];
             // console.log(webhook_event);
 
+            let sender_id = webhook_event.sender.id;
+            let recipient_id = webhook_event.recipient.id;
+            let text = webhook_event.message.text;
+
             if (text) {
                 // log data
-                let sender_id = webhook_event.sender.id;
-                let recipient_id = webhook_event.recipient.id;
-                let text = webhook_event.message.text;
                 console.log('sender_id:' + sender_id + ', recipient_id:' + recipient_id + ', text:' + text);
 
                 // prepare and send response
@@ -67,6 +68,7 @@ router.post('/', (req, res) => {
                     "text": `Echo: "${text}"`
                 };
 
+                // send response
                 callSendAPI(sender_id, response);
             }
         });
