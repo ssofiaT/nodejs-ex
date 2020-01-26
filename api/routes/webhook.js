@@ -1,6 +1,6 @@
 const
     express = require('express'),
-    request = require('request'),
+    //request = require('request'),
     util = require('util'),
     router = express.Router();
 
@@ -54,11 +54,13 @@ router.post('/', (req, res) => {
             // will only ever contain one message, so we get index 0
             let webhook_event = entry.messaging[0];
             console.log(webhook_event);
+            /*
             let sender_id = webhook_event.sender.id;
             let recipient_id = webhook_event.recipient.id;
             let text = webhook_event.message.text;
 
             console.log('sender_id:' + sender_id + ', recipient_id:' + recipient_id + ', text:' + text);
+            */
         });
 
         // Returns a '200 OK' response to all requests
@@ -70,6 +72,7 @@ router.post('/', (req, res) => {
     }
 });
 
+/*
 function callSendAPI(sender_psid, response) {
     // Construct the message body
     let request_body = {
@@ -93,5 +96,6 @@ function callSendAPI(sender_psid, response) {
         }
     });
 }
+*/
 
 module.exports = router;
