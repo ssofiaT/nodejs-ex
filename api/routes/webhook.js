@@ -80,10 +80,14 @@ router.post('/', (req, res) => {
                     'and you?',
                     'it is too late',
                     'I am cold',
-                    'I will work hard, I promiss!',
+                    'I will work hard, I promise!',
                     'I told you so...',
                     'Dont worry',
-                    'Be happy'];
+                    'Be happy',
+                    'You look good today... ;)',
+                    'Sorry, can you repeat that?',
+                    'Think about it...',
+                    'Nothing'];
 
                 let choice = Math.floor(Math.random() * answers.length);
                 // log data
