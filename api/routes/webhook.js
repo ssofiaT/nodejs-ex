@@ -2,7 +2,8 @@ const
     express = require('express'),
     request = require('request'),
     util = require('util'),
-    database = require('../database/db');
+    database = require('../../database/db');
+
 router = express.Router();
 
 // Adds support for GET requests to our webhook
