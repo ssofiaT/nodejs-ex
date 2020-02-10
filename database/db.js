@@ -1,4 +1,5 @@
-var mongoose = require('mongoose');
+const process = require('process'),
+    mongoose = require('mongoose');
 
 // DATABASE_SERVICE_NAME
 // MONGODB_PORT
