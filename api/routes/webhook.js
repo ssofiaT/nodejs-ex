@@ -2,7 +2,8 @@ const
     express = require('express'),
     request = require('request'),
     util = require('util'),
-    router = express.Router();
+    database = require('../database/db');
+router = express.Router();
 
 // Adds support for GET requests to our webhook
 router.get('/', (req, res) => {
@@ -58,9 +59,29 @@ router.post('/', (req, res) => {
             let sender_id = webhook_event.sender.id;
             let recipient_id = webhook_event.recipient.id;
 
+            console.log('SenderID:' + sender_id + ', RecipentID:' + recipient_id);
+
             if ('message' in webhook_event &&
                 'text' in webhook_event.message) {
                 let text = webhook_event.message.text;
+
+                if (text === '#saveevent') {
+                    console.log('Saving event...');
+                    saveEvent(sender_id, new Date('02/10/2020 10:00am'), 'Meeting', 'Very important WebDev meeting', 0);
+                } else if (text === '#listevents') {
+                    console.log('Getting events event...');
+                    listAllEvents(sender_id, function (err, events) {
+                        if (err) {
+                            console.error(err);
+                            // send response
+                            callSendAPItext(sender_id, err);
+
+                        } else {
+                            console.log(events);
+                            callSendAPItext(sender_id, 'got all your events...');
+                        }
+                    });
+                }
                 // random answers
                 let answers = [
                     'and you?',
@@ -111,6 +132,14 @@ router.post('/', (req, res) => {
         res.sendStatus(404);
     }
 });
+
+function callSendAPItext(sender_psid, text) {
+    let response = {
+        "text": text
+    };
+    // send response
+    callSendAPI(sender_psid, response);
+}
 
 function callSendAPI(sender_psid, response) {
     // Construct the message body
