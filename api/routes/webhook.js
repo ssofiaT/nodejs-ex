@@ -66,27 +66,87 @@ router.post('/', (req, res) => {
                 'text' in webhook_event.message) {
                 let text = webhook_event.message.text;
 
-                if (text === '#saveevent') {
+                if (text.search(/^@help$/gmi) >= 0) {
+                    let sHelp = 'commands:\n@saveevent\ndYYYY-MM-DDTHH:MM:SS\nnName\n<cDescription>\n<pPriority>\n\n@listevents\n'
+                    callSendAPItext(sender_id, sHelp);
+
+                } else if (text.search(/^@saveevent$/gmi) >= 0) {
                     console.log('Saving event...');
-                    db.saveEvent(sender_id, new Date('2020-02-11T14:30:00'), 'Meeting', 'Very important WebDev meeting', 0, (err, event)=>{
-                        if(err){
-                            console.log('db.saveEvent: ' + err);
-                        } else {
-                            console.log('db.saveEvent: Done.');
-                            callSendAPItext(sender_id, 'Saved the Event.');
+                    let eventDate = null;
+                    let eventName = '';
+                    let eventComment = '';
+                    let eventPriority = '';
+
+                    try {
+                        // date
+                        let match = text.match(/^D(.+)$/);
+                        if (!match) throw "Event date is missing <dYYYY-MM-DDTHH:MM:SS>"
+                        eventDate = new Date(match[1]);
+
+                        // name
+                        match = text.match(/^N(.+)$/);
+                        if (!match) throw "Event Name is missing <nName>"
+                        eventName = match[1];
+
+                        // comment
+                        match = text.match(/^C(.+)$/);
+                        if (match) {
+                            eventComment = match[1];
                         }
-                    });
-                } else if (text === '#listevents') {
+
+                        // priority
+                        match = text.match(/^P(\d+)$/);
+                        if (match) {
+                            eventPriority = match[1];
+                        }
+
+                        // save
+                        db.saveEvent(sender_id, eventDate, eventName, eventComment, +eventPriority, (err, event) => {
+                            if (err) {
+                                console.log('db.saveEvent: ' + err);
+                                callSendAPItext(sender_id, 'Error @saveevent: ' + err);
+                            } else {
+                                console.log('db.saveEvent: Done.');
+                                callSendAPItext(sender_id, 'Saved the Event.');
+                            }
+                        });
+                    }
+                    catch (err) {
+                        console.log('Error @saveevent: ' + err);
+                        callSendAPItext(sender_id, 'Error @saveevent: ' + err);
+                    }
+                } else if (text.search(/@listevents/gmi) >= 0) {
                     console.log('Getting events event...');
-                    db.listAllEvents(sender_id, function (err, events) {
+                    db.listAllEvents(sender_id, (err, events) => {
                         if (err) {
-                            console.error('db.listAllEvents: ' + err);
+                            console.error('Error @listevents: ' + err);
                             // send response
-                            callSendAPItext(sender_id, err);
+                            callSendAPItext(sender_id, 'Error @listevents: ' + err);
 
                         } else {
-                            console.log('db.listAllEvents: ' + events);
-                            callSendAPItext(sender_id, 'Read all events.');
+                            /*
+                            { 
+                                _id: 5e42324eb7fa7a00190cc18b,
+                                ownerId: '3485581948181443',
+                                date: 2020-02-11T14:30:00.000Z,
+                                name: 'Meeting',
+                                description: 'Very important WebDev meeting',
+                                priority: 0,
+                                __v: 0 
+                            }
+                            */
+                            console.log('@listevents: ' + events);
+                            let allEvents = ''
+                            events.forEach((event) => {
+                                allEvents += 'D' + event.date + '\n';
+                                allEvents += 'N' + event.name + '\n';
+                                if (event.description.length)
+                                    allEvents += 'C' + event.description + '\n';
+                                if (event.priority.length)
+                                    allEvents += 'P' + event.priority + '\n';
+                                allEvents += '\n'
+                            });
+                            callSendAPItext(sender_id, allEvents);
                         }
                     });
                 } else {
