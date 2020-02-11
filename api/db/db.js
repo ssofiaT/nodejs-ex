@@ -17,7 +17,7 @@ function saveEvent(ownerId, date, name, description, priority, callbackfn) {
 }
 
 function listAllEvents(sender_id, callbackfn) {
-    Event.find((err, events) => {
+    Event.find({ ownerId: new RegExp(sender_id, 'i') }, (err, events) => {
         callbackfn(err, events);
     });
 }

@@ -67,7 +67,7 @@ router.post('/', (req, res) => {
                 let text = webhook_event.message.text;
 
                 if (text.search(/^@help$/gmi) >= 0) {
-                    let sHelp = 'commands:\n@saveevent\ndYYYY-MM-DDTHH:MM:SS\nnName\n<cDescription>\n<pPriority>\n\n@listevents\n'
+                    let sHelp = 'commands:\n@saveevent\nDYYYY-MM-DDTHH:MM:SS\nNEvent\n<CDescription>\n<PPriority>\n\n@listevents\n'
                     callSendAPItext(sender_id, sHelp);
 
                 } else if (text.search(/^@saveevent$/gmi) >= 0) {
@@ -142,8 +142,7 @@ router.post('/', (req, res) => {
                                 allEvents += 'N' + event.name + '\n';
                                 if (event.description.length)
                                     allEvents += 'C' + event.description + '\n';
-                                if (event.priority.length)
-                                    allEvents += 'P' + event.priority + '\n';
+                                allEvents += 'P' + event.priority + '\n';
                                 allEvents += '\n'
                             });
                             callSendAPItext(sender_id, allEvents);
