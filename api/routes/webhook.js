@@ -2,7 +2,7 @@ const
     express = require('express'),
     request = require('request'),
     util = require('util'),
-    db = require('../../database/db');
+    db = require('../db/db');
 
 router = express.Router();
 
