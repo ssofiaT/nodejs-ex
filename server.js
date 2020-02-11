@@ -4,7 +4,8 @@ const
   app = express(),
   morgan = require('morgan'),
   bodyParser = require('body-parser'),
-  webhookRoute = require('./api/routes/webhook');
+  webhookRoute = require('./api/routes/webhook'),
+  mongoose = require('mongoose');
   
 Object.assign = require('object-assign')
 
