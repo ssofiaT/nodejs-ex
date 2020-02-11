@@ -1,14 +1,6 @@
-const process = require('process'),
-    mongoose = require('mongoose');
+const Event = require('./models/event');
 
-// DATABASE_SERVICE_NAME
-// MONGODB_PORT
-// MONGODB_USER
-// MONGODB_PASSWORD
-// MONGODB_DATABASE
-
-
-function saveEvent(ownerId, date, name, description, priority) {
+function saveEvent(ownerId, date, name, description, priority, callbackfn) {
     let event = new Event({
         ownerId: ownerId,
         date: date,
@@ -16,12 +8,7 @@ function saveEvent(ownerId, date, name, description, priority) {
         description: description,
         priority: priority
     });
-
-    event.save(function (err, event) {
-        if (err) {
-            return console.error(err);
-        }
-    });
+    event.save(callbackfn (err, event));
 }
 
 function listAllEvents(sender_id, callbackfn) {
@@ -29,3 +16,5 @@ function listAllEvents(sender_id, callbackfn) {
         callbackfn(err, events);
     });
 }
+
+module.exports = {saveEvent, listAllEvents}
