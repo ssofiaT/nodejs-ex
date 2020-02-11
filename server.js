@@ -20,7 +20,7 @@ if (process.env.DATABASE_SERVICE_NAME) {
 
     const mongoURL = 'mongodb://' + mongoUser + ':' + mongoPassword + '@' + mongoServiceHost + ':' + mongoServicePort + '/' + mongoDatabase;
 
-    console.log('MongoDB:' + mongoURL);
+    console.log('MongoDB connection:   ' + mongoURL);
   
     mongoose.connect(mongoURL, { useNewUrlParser: true });
 
