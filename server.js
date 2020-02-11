@@ -10,13 +10,15 @@ const
 Object.assign = require('object-assign')
 
 if (process.env.DATABASE_SERVICE_NAME) {
-    const mongoServiceName = process.env.DATABASE_SERVICE_NAME.toUpperCase(),
-        mongoPort = process.env[mongoServiceName + '_PORT'],
-        mongoDatabase = process.env[mongoServiceName + '_DATABASE'],
-        mongoPassword = process.env[mongoServiceName + '_PASSWORD'],
-        mongoUser = process.env[mongoServiceName + '_USER'];
+    const 
+      mongoServiceName = process.env.DATABASE_SERVICE_NAME.toUpperCase(),
+      mongoServiceHost = process.env[mongoServiceName + '_SERVICE_HOST'],
+      mongoServicePort = process.env[mongoServiceName + '_SERVICE_PORT'],
+      mongoDatabase = process.env[mongoServiceName + '_DATABASE'],
+      mongoPassword = process.env[mongoServiceName + '_PASSWORD'],
+      mongoUser = process.env[mongoServiceName + '_USER'];
 
-    const mongoURL = 'mongodb://' + mongoUser + ':' + mongoPassword + '@' + mongoPort + '/' + mongoDatabase;
+    const mongoURL = 'mongodb://' + mongoUser + ':' + mongoPassword + '@' + mongoServiceHost + ':' + mongoServicePort + '/' + mongoDatabase;
 
     console.log('MongoDB:' + mongoURL);
   
