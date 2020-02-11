@@ -79,23 +79,23 @@ router.post('/', (req, res) => {
 
                     try {
                         // date
-                        let match = text.match(/^D(.+)$/);
+                        let match = text.match(/^D(.+)$/m);
                         if (!match) throw "Event date is missing <dYYYY-MM-DDTHH:MM:SS>"
                         eventDate = new Date(match[1]);
 
                         // name
-                        match = text.match(/^N(.+)$/);
+                        match = text.match(/^N(.+)$/m);
                         if (!match) throw "Event Name is missing <nName>"
                         eventName = match[1];
 
                         // comment
-                        match = text.match(/^C(.+)$/);
+                        match = text.match(/^C(.+)$/m);
                         if (match) {
                             eventComment = match[1];
                         }
 
                         // priority
-                        match = text.match(/^P(\d+)$/);
+                        match = text.match(/^P(\d+)$/m);
                         if (match) {
                             eventPriority = match[1];
                         }
