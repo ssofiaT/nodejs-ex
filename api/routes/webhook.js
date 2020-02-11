@@ -68,66 +68,62 @@ router.post('/', (req, res) => {
 
                 if (text === '#saveevent') {
                     console.log('Saving event...');
-                    db.saveEvent(sender_id, new Date('02/10/2020 10:00am'), 'Meeting', 'Very important WebDev meeting', 0, (err, event)=>{
+                    db.saveEvent(sender_id, new Date('2020-02-11T14:30:00'), 'Meeting', 'Very important WebDev meeting', 0, (err, event)=>{
                         if(err){
-                            console.log('db.saveEvent:' + err);
+                            console.log('db.saveEvent: ' + err);
                         } else {
                             console.log('db.saveEvent: Done.');
+                            callSendAPItext(sender_id, 'Saved the Event.');
                         }
                     });
                 } else if (text === '#listevents') {
                     console.log('Getting events event...');
                     db.listAllEvents(sender_id, function (err, events) {
                         if (err) {
-                            console.error(err);
+                            console.error('db.listAllEvents: ' + err);
                             // send response
                             callSendAPItext(sender_id, err);
 
                         } else {
-                            console.log(events);
-                            callSendAPItext(sender_id, 'got all your events...');
+                            console.log('db.listAllEvents: ' + events);
+                            callSendAPItext(sender_id, 'Read all events.');
                         }
                     });
+                } else {
+                    // random answers
+                    let answers = [
+                        'and you?',
+                        'dont know',
+                        'well...',
+                        'so what?',
+                        'not now',
+                        'please!',
+                        'yes',
+                        'no',
+                        'you are welcome',
+                        'I need to check..',
+                        'what is ur name?',
+                        'my name is bot',
+                        'is this supposed to be funny?',
+                        'I am working hard!',
+                        'and you?',
+                        'it is too late',
+                        'I am cold',
+                        'I will work hard, I promise!',
+                        'I told you so...',
+                        'Dont worry',
+                        'Be happy',
+                        'You look good today... ;)',
+                        'Sorry, can you repeat that?',
+                        'Think about it...',
+                        'Nothing'];
+
+                    let choice = Math.floor(Math.random() * answers.length);
+                    // log data
+                    console.log('sender_id:' + sender_id + ', recipient_id:' + recipient_id + ', text:' + text + ', choice:' + answers[choice]);
+                    // send response
+                    callSendAPItext(sender_id, answers[choice]);
                 }
-                // random answers
-                let answers = [
-                    'and you?',
-                    'dont know',
-                    'well...',
-                    'so what?',
-                    'not now',
-                    'please!',
-                    'yes',
-                    'no',
-                    'you are welcome',
-                    'I need to check..',
-                    'what is ur name?',
-                    'my name is bot',
-                    'is this supposed to be funny?',
-                    'I am working hard!',
-                    'and you?',
-                    'it is too late',
-                    'I am cold',
-                    'I will work hard, I promise!',
-                    'I told you so...',
-                    'Dont worry',
-                    'Be happy',
-                    'You look good today... ;)',
-                    'Sorry, can you repeat that?',
-                    'Think about it...',
-                    'Nothing'];
-
-                let choice = Math.floor(Math.random() * answers.length);
-                // log data
-                console.log('sender_id:' + sender_id + ', recipient_id:' + recipient_id + ', text:' + text + ', choice:' + answers[choice]);
-                // prepare and send response
-                response = {
-                    //"text": `Echo: "${text}"`
-                    "text": answers[choice]
-                };
-
-                // send response
-                callSendAPI(sender_id, response);
             }
         });
 
