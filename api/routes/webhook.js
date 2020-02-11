@@ -2,7 +2,7 @@ const
     express = require('express'),
     request = require('request'),
     util = require('util'),
-    database = require('../../database/db');
+    db = require('../../database/db');
 
 router = express.Router();
 
@@ -68,10 +68,16 @@ router.post('/', (req, res) => {
 
                 if (text === '#saveevent') {
                     console.log('Saving event...');
-                    saveEvent(sender_id, new Date('02/10/2020 10:00am'), 'Meeting', 'Very important WebDev meeting', 0);
+                    db.saveEvent(sender_id, new Date('02/10/2020 10:00am'), 'Meeting', 'Very important WebDev meeting', 0, (err, event)=>{
+                        if(err){
+                            console.log('db.saveEvent:' + err);
+                        } else {
+                            console.log('db.saveEvent: Done.');
+                        }
+                    });
                 } else if (text === '#listevents') {
                     console.log('Getting events event...');
-                    listAllEvents(sender_id, function (err, events) {
+                    db.listAllEvents(sender_id, function (err, events) {
                         if (err) {
                             console.error(err);
                             // send response
