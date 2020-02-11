@@ -8,6 +8,24 @@ const
   
 Object.assign = require('object-assign')
 
+if (process.env.DATABASE_SERVICE_NAME) {
+    const mongoServiceName = process.env.DATABASE_SERVICE_NAME.toUpperCase(),
+        mongoPort = process.env[mongoServiceName + '_PORT'],
+        mongoDatabase = process.env[mongoServiceName + '_DATABASE'],
+        mongoPassword = process.env[mongoServiceName + '_PASSWORD'],
+        mongoUser = process.env[mongoServiceName + '_USER'];
+
+    const mongoURL = 'mongodb://' + mongoUser + ':' + mongoPassword + '@' + mongoPort + '/' + mongoDatabase;
+
+    mongoose.connect(mongoURL, { useNewUrlParser: true });
+
+    var db = mongoose.connection;
+    db.on('error', console.error.bind(console, 'connection error:'));
+    db.once('open', function () {
+        console.log('Connected to MongoDB');
+    });
+}
+
 var port = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080,
   ip = process.env.IP || process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0';
 
