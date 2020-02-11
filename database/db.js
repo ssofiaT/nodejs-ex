@@ -1,7 +1,9 @@
-const Event = require('./models/event');
+const mongoose = require('mongoose'),
+    Event = require('./models/event');
 
 function saveEvent(ownerId, date, name, description, priority, callbackfn) {
     let event = new Event({
+        _id: mongoose.Types.ObjectId(),
         ownerId: ownerId,
         date: date,
         name: name,
