@@ -116,7 +116,7 @@ router.post('/', (req, res) => {
                         callSendAPItext(sender_id, 'Error @saveevent: ' + err);
                     }
                 } else if (text.search(/@listevents/gmi) >= 0) {
-                    console.log('Getting events event...');
+                    console.log('Getting events...');
                     db.listAllEvents(sender_id, (err, events) => {
                         if (err) {
                             console.error('Error @listevents: ' + err);
@@ -145,7 +145,7 @@ router.post('/', (req, res) => {
                                 allEvents += 'P' + event.priority + '\n';
                                 allEvents += '\n'
                             });
-                            callSendAPItext(sender_id, allEvents);
+                            callSendAPItext(sender_id, allEvents.length ? allEvents : 'Empty');
                         }
                     });
                 } else {
