@@ -11,11 +11,13 @@ function saveEvent(ownerId, date, name, description, priority, callbackfn) {
         description: description,
         priority: priority
     });
-    event.save(callbackfn (err, event));
+    event.save((err, event) => {
+        callbackfn (err, event);
+    });
 }
 
 function listAllEvents(sender_id, callbackfn) {
-    Event.find(function (err, events) {
+    Event.find((err, events) => {
         callbackfn(err, events);
     });
 }
