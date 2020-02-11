@@ -1,4 +1,5 @@
-const mongoose = require('mongoose'),
+const 
+    mongoose = require('mongoose'),
     Event = require('./models/event');
 
 function saveEvent(ownerId, date, name, description, priority, callbackfn) {
